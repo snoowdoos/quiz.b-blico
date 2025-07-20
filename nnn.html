@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="PT-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Bíblico</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f0f4f8;
+        color: #333;
+        padding: 30px;
+      }
+      .quiz-container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: auto;
+      }
+      .pergunta {
+        background-color: #dcedc8;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        font-size: 18px;
+        text-align: center;
+        font-weight: bold;
+      }
+      .resposta {
+        margin-bottom: 10px;
+        background-color: #e3f2fd;
+        padding: 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: 0.3s;
+      }
+      .resposta:hover {
+        border-color: #64b5f6;
+        background-color: #bbdefb;
+      }
+      .resposta.correta {
+        background-color: #c8e6c9;
+        border-color: green;
+      }
+      .resposta.errada {
+        background-color: #ffcdd2;
+        border-color: red;
+      }
+      #resultado {
+        margin-top: 20px;
+        font-weight: bold;
+        text-align: center;
+      }
+      .butoes {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
+      }
+      .botoes button {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: none;
+        background-color: #4caf50;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      .botoes button:hover {
+        background-color: #45a049;
+      }
+      .botao-reiniciar {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #2196f3;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        border-radius: 4px;
+      }
+      .botao-reiniciar:hover {
+        background-color: #218838;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="quiz-container">
+      <div id="pergunta" class="pergunta"></div>
+      <div id="respostas"></div>
+      <div id="resultado"></div>
+      <div class="botoes">
+        <button onclick="proximaPergunta()">Próxima</button>
+        <button onclick="voltarPergunta()">Voltar</button>
+      </div>
+    </div>
+
+    <script>
+      const perguntas = [
+        // As 94 questões estarão aqui!
+        {
+          texto: "Qual foi o rei que escreveu muitos dos Salmos?",
+          alternativas: [
+            {texto: "Davi", correta: true},
+            {texto: "Salomão", correta: false},
+            {texto: "Saul", correta: false},
+            {texto: "Acabe", correta: false},
+          ],
+        },
+        {
+          texto: "Na parábola do semeador, o que representa o solo rochoso?",
+          alternativas: [
+            {
+              texto: "Pessoas que rejeitam imediatamente a Palavra",
+              correta: false,
+            },
+            {texto: "Quem ouve com alegria, mas não tem raiz", correta: true},
+            {texto: "Pessoas que ouvem a Palavra, se alegram", correta: false},
+            {
+              texto: "Pessoas que nunca ouviram a Palavra de Deus",
+              correta: false,
+            },
+          ],
+        },
+        {
+          texto:
+            "Quem são os dois personagens que não morreram segundo a Bíblia?  ",
+          alternativas: [
+            {texto: "Ezequiel e Elias", correta: false},
+            {texto: "Lameque e Jared", correta: false},
+            {texto: "Enoque e Elias", correta: true},
+            {texto: "Matusalém e Noé", correta: false},
+          ],
+        },
+        {
+          texto: "Quantos anciãos há ao redor do trono de Deus no Apocalipse ?",
+          alternativas: [
+            {texto: "12 anciãos", correta: false},
+            {texto: "24 anciãos", correta: true},
+            {texto: "7 anciãos", correta: false},
+            {texto: "32 anciãos", correta: false},
+          ],
+        },
+        {
+          texto: "Quantos capítulos tem o livro de Gênesis?",
+          alternativas: [
+            {texto: "48 capítulos", correta: false},
+            {texto: "67 capítulos", correta: false},
+            {texto: "50 capítulos", correta: true},
+            {texto: "60 capítulos", correta: false},
+          ],
+        },
+        {
+          texto: "Quantas igrejas são citadas no Apocalipse?  ",
+          alternativas: [
+            {texto: "Treze igrejas", correta: false},
+            {texto: "Quinze igrejas", correta: false},
+            {texto: "Dez igrejas", correta: false},
+            {texto: "Sete igrejas", correta: true},
+          ],
+        },
+        {
+          texto: "Quantos cápitulos tem o livro de Isaías?",
+          alternativas: [
+            {texto: "57", correta: false},
+            {texto: "63", correta: false},
+            {texto: "66", correta: true},
+            {texto: "72", correta: false},
+          ],
+        },
+        {
+          texto: "Quem escreveu o livro das lamentações?",
+          alternativas: [
+            {texto: "Jeremias", correta: true},
+            {texto: "Paulo", correta: false},
+            {texto: "João", correta: false},
+            {texto: "Moisés", correta: false},
+          ],
+        },
+        {
+          texto: "Qual o nome do pai de Jacó?",
+          alternativas: [
+            {texto: "Esaú", correta: false},
+            {texto: "Isaac", correta: true},
+            {texto: "Abimeleque", correta: false},
+            {texto: "Abraão", correta: false},
+          ],
+        },
+        {
+          texto: " O que é comemorado no dia de Pentecostes?",
+          alternativas: [
+            {texto: "A Epifania do senhor", correta: false},
+            {texto: " A ascensão do senhor", correta: false},
+            {
+              texto: "A descida do Espírito Santo sobre os Apóstolos",
+              correta: true,
+            },
+            {texto: "O corpo e sangue de Cristo", correta: false},
+          ],
+        },
+        {
+          texto: "Quem matou Golias?",
+          alternativas: [
+            {texto: "Mical", correta: false},
+            {texto: "Natã", correta: false},
+            {texto: "Joabe", correta: false},
+            {texto: "Davi", correta: true},
+          ],
+        },
+        {
+          texto:
+            "Quem dise: 'Senhor a quem iremos? Tu tens palavras de vida eterna' ? ",
+          alternativas: [
+            {texto: "João ", correta: false},
+            {texto: "Maria Madalena ", correta: false},
+            {texto: "Pedro", correta: true},
+            {texto: "Lucas", correta: false},
+          ],
+        },
+        {
+          texto: "Qual o número da Besta, segundo o Apocalipse?  ",
+          alternativas: [
+            {texto: "1406", correta: false},
+            {texto: "666", correta: true},
+            {texto: "442", correta: false},
+            {texto: "22'2", correta: false},
+          ],
+        },
+        {
+          texto: "Quantos dias durou o dilúvio?",
+          alternativas: [
+            {texto: "35 dias e 35 noites", correta: false},
+            {texto: "50 dias e 50 noites", correta: false},
+            {texto: "40 dias e 40 noites", correta: true},
+            {texto: "60 dias e 60 noites", correta: false},
+          ],
+        },
+        {
+          texto:
+            "Quem teve sua fé testada com a ordem de sacrificar seu filho ?",
+          alternativas: [
+            {texto: "Abraão", correta: true},
+            {texto: "Terá", correta: false},
+            {texto: "Ismael", correta: false},
+            {texto: "Ló", correta: false},
+          ],
+        },
+        {
+          texto: "Qual o nome da esposa de Oséias?",
+          alternativas: [
+            {texto: "Ester", correta: false},
+            {texto: "Sará", correta: false},
+            {texto: "Gômer", correta: true},
+            {texto: "Rute", correta: false},
+          ],
+        },
+        {
+          texto: "Qual profeta foi engolido por um grande peixe?",
+          alternativas: [
+            {texto: "Amós", correta: false},
+            {texto: "Jonas", correta: true},
+            {texto: "Ezequiel", correta: false},
+            {texto: "Paulo", correta: false},
+          ],
+        },
+        {
+          texto: "Quem interpretava sonhos na prisão do Egito?",
+          alternativas: [
+            {texto: "José", correta: false},
+            {texto: "Efraim", correta: false},
+            {texto: "Manassés", correta: false},
+            {texto: "José, filho de jacó", correta: true},
+          ],
+        },
+        {
+          texto: "Qual o apóstolo era cobrador de imposto?",
+          alternativas: [
+            {texto: "André", correta: false},
+            {texto: "Tiago", correta: false},
+            {texto: "Mateus", correta: true},
+            {texto: "Filipe", correta: false},
+          ],
+        },
+        {
+          texto: "Quem foi o primeiro mártir cristão?",
+          alternativas: [
+            {texto: "Santo Estevão", correta: true},
+            {texto: "São Pedro", correta: false},
+            {texto: "Martires de Lyon", correta: false},
+            {texto: "São Tarcísio", correta: false},
+          ],
+        },
+        {
+          texto:
+            "Qual parábola Jesus usou para ensinar sobre o crescimento do Reino de Deus a partir de algo pequeno?",
+          alternativas: [
+            {texto: "Joio e do trigo", correta: false},
+            {texto: "Grão de Mostarda", correta: true},
+            {texto: "O Juíz e a Viúva", correta: false},
+            {texto: "A Ovelha Perdida", correta: false},
+          ],
+        },
+        {
+          texto: "Qual o nome da mãe de Samuel?",
+          alternativas: [
+            {texto: "Ana", correta: true},
+            {texto: "Miriã", correta: false},
+            {texto: "Raabe", correta: false},
+            {texto: "Débora", correta: false},
+          ],
+        },
+        {
+          texto: "Quantos capítulos tem o livro de Apocalipse?  ",
+          alternativas: [
+            {texto: "32 capítulos", correta: false},
+            {texto: "22 capítulos", correta: true},
+            {texto: "29 capítulos", correta: false},
+            {texto: "25 capítulos", correta: false},
+          ],
+        },
+        {
+          texto: "Quem sucedeu Moisés na liderança do povo de Israel?",
+          alternativas: [
+            {texto: "Amós", correta: false},
+            {texto: "Calebe", correta: false},
+            {texto: "Josué", correta: true},
+            {texto: "Beijamin", correta: false},
+          ],
+        },
+        {
+          texto: "Quantos envangelhos há na Bíblia ?",
+          alternativas: [
+            {texto: "Dois", correta: false},
+            {texto: "seis", correta: false},
+            {texto: "Quatro", correta: true},
+            {texto: "Cinco", correta: false},
+          ],
+        },
+        {
+          texto:
+            "Em que livro está escrito: 'Tudo tem seu tempo determinado' ?",
+          alternativas: [
+            {texto: "Eclesiastes 3,1", correta: true},
+            {texto: "Êxodo 5,7", correta: false},
+            {texto: "Provérbios 7:1", correta: false},
+            {texto: "Isaías 41:10", correta: false},
+          ],
+        },
+        {
+          texto: "Quem foi Melquisedec?",
+          alternativas: [
+            {texto: "Rei", correta: false},
+            {texto: "Rei de Salém e Sarcedote", correta: true},
+            {texto: "Pastor de ovelhas", correta: false},
+            {texto: "Médico", correta: false},
+          ],
+        },
+        {
+          texto: "Qual o Salmo mais longo da bíblia?",
+          alternativas: [
+            {texto: "Salmos 121", correta: false},
+            {texto: "Salmos 23", correta: false},
+            {texto: "Salmos 119", correta: true},
+            {texto: "Salmos 91", correta: false},
+          ],
+        },
+        {
+          texto: "Quantas vezes Jesus pediu para que Pedro perdoasse?",
+          alternativas: [
+            {texto: "Setenta vezes sete", correta: true},
+            {texto: "Quatrocentos e noventa vezes", correta: false},
+            {texto: "Sete ", correta: false},
+            {texto: "Cinquenta vezes", correta: false},
+          ],
+        },
+        {
+          texto: "Quem foi o apóstolo que negou Jesus trẽs vezes?",
+          alternativas: [
+            {texto: "Tomé ", correta: false},
+            {texto: "Pedro", correta: true},
+            {texto: "Bartolomeu", correta: false},
+            {texto: "Tadeu", correta: false},
+          ],
+        },
+        {
+          texto: "Qual o nome do homem que ajudou jesus a carregar a cruz?",
+          alternativas: [
+            {texto: "Amós", correta: false},
+            {texto: "João", correta: false},
+            {texto: "José", correta: false},
+            {texto: "Simão de cirene", correta: true},
+          ],
+        },
+        {
+          texto: "Qual  apóstolo  foi chamado de 'filho da consolação' ?  ",
+          alternativas: [
+            {texto: "João", correta: false},
+            {texto: "Barnabé", correta: true},
+            {texto: "Tadeu", correta: false},
+            {texto: "Simão, o Zelote", correta: false},
+          ],
+        },
+        {
+          texto: "Quem duvidou da resurreição de Jesus até ver suas chagas?",
+          alternativas: [
+            {texto: "Tomé", correta: true},
+            {texto: "Felipe", correta: false},
+            {texto: "Josué", correta: false},
+            {texto: "Elias", correta: false},
+          ],
+        },
+        {
+          texto: "Quem foi o governador romano que condenou Jesus?  ",
+          alternativas: [
+            {texto: "Valério Grato", correta: false},
+            {texto: "Pôncio Pilatos", correta: true},
+            {texto: "Marcelo", correta: false},
+            {texto: "Márulo", correta: false},
+          ],
+        },
+        {
+          texto: "Quem escreveu o livro de Apocalipse?  ",
+          alternativas: [
+            {texto: "São João", correta: true},
+            {texto: "Matias", correta: false},
+            {texto: "Moisés", correta: false},
+            {texto: "Abraão", correta: false},
+          ],
+        },
+        {
+          texto: "O que caiu do céu para alimentar os israelitas no deserto?  ",
+          alternativas: [
+            {texto: "Carne", correta: false},
+            {texto: "Peixes", correta: false},
+            {texto: "Pão", correta: false},
+            {texto: "Maná", correta: true},
+          ],
+        },
+        {
+          texto: "Qual apóstolo escreveu mais cartas no Novo testamento?  ",
+          alternativas: [
+            {texto: "Tomé", correta: false},
+            {texto: "São Paulo", correta: true},
+            {texto: "Tiago Maior", correta: false},
+            {texto: "Mateus", correta: false},
+          ],
+        },
+        {
+          texto: "Qual foi o primeiro milagre de Jesus?  ",
+          alternativas: [
+            {texto: "Andar sobre a água", correta: false},
+            {texto: "Transformar água em vinho", correta: true},
+            {texto: "Multiplicação do pães e peixes", correta: false},
+            {texto: "A cura do cego de nascença", correta: false},
+          ],
+        },
+        {
+          texto: "Onde Jesus nasceu?",
+          alternativas: [
+            {texto: "Belém da Judeia", correta: true},
+            {texto: " Gólgota", correta: false},
+            {texto: "Jericó", correta: false},
+            {texto: "Síria", correta: false},
+          ],
+        },
+        {
+          texto: "Quem caiu da janela e morreu durante o discurso de Paulo?",
+          alternativas: [
+            {texto: "Bartimeu", correta: false},
+            {texto: "Eliseu", correta: false},
+            {texto: "Zaqueu", correta: false},
+            {texto: "Êutico", correta: true},
+          ],
+        },
+        {
+          texto: "Qual cidade Paulo escrveu  sua famosa carta sobre o amor?  ",
+          alternativas: [
+            {texto: "Társis", correta: false},
+            {texto: "Babel", correta: false},
+            {texto: "Samaria", correta: false},
+            {texto: "Corinto", correta: true},
+          ],
+        },
+        {
+          texto: "Quantos dias Jesus permaneceu na terra após ressucitar?  ",
+          alternativas: [
+            {texto: "29 dias", correta: false},
+            {texto: "35 dias", correta: false},
+            {texto: "40 dias", correta: true},
+            {texto: "50 dias", correta: false},
+          ],
+        },
+
+        {
+          texto: "Qual o profeta que teve uma visão do vale dos ossos secos?",
+          alternativas: [
+            {texto: "Isaías", correta: false},
+            {texto: "Ezequiel", correta: true},
+            {texto: "Jeremias", correta: false},
+            {texto: "Daniel", correta: false},
+          ],
+        },
+        {
+          texto: "Quantos dias Jesus permaneceu no deserto?  ",
+          alternativas: [
+            {texto: "27 dias", correta: false},
+            {texto: "55 dias", correta: false},
+            {texto: "40 dias", correta: true},
+            {texto: "50 dias", correta: false},
+          ],
+        },
+        {
+          texto:
+            "Qual livro bíblico é um diálogo filosófico sobre sofrimento?  ",
+          alternativas: [
+            {texto: "Livro de Jó", correta: true},
+            {texto: "Eclesiastes", correta: false},
+            {texto: "Evangelho de São João", correta: false},
+            {texto: "Provérbios", correta: false},
+          ],
+        },
+        {
+          texto: "Quem foi o fariseu que visitou Jesus a noite?  ",
+          alternativas: [
+            {texto: "José de Arimateia", correta: false},
+            {texto: "Nicodemos", correta: true},
+            {texto: "Saulo de Tarso", correta: false},
+            {texto: "Gamaliel", correta: false},
+          ],
+        },
+        {
+          texto:
+            "Quem foi escolhido para substituir Judas Iscariotes como Apóstolo?  ",
+          alternativas: [
+            {texto: "Matias", correta: true},
+            {texto: "São Agostinho", correta: false},
+            {texto: "Tomás de Áquino", correta: false},
+            {texto: "Atanásio", correta: false},
+          ],
+        },
+        {
+          texto: "Qual o menor versículo da bíblia?  ",
+          alternativas: [
+            {texto: "João 4,8", correta: false},
+            {texto: "Salmos 23:1", correta: false},
+            {texto: "João 11,35 ", correta: true},
+            {texto: "Mateus 6:33", correta: false},
+          ],
+        },
+        {
+          texto: "Onde Jesus foi batizado?",
+          alternativas: [
+            {texto: "Rio Nilo", correta: false},
+            {texto: "Rio Jordão", correta: true},
+            {texto: "Rio Eufrates", correta: false},
+            {texto: "Rio tigre", correta: false},
+          ],
+        },
+        {
+          texto: "Qual profetisa falou do menino Jesus no templo?",
+          alternativas: [
+            {texto: "Hulda", correta: false},
+            {texto: "Miriã", correta: false},
+            {texto: "Débora", correta: false},
+            {texto: "Ana", correta: true},
+          ],
+        },
+        {
+          texto:
+            "Qual parábola termina com o dono dizendo: 'Muitos são chamados, poucos são escolhidos' ?  ",
+          alternativas: [
+            {
+              texto: "A pérola de grande valor (Mt C 13, V 45 a 46)",
+              correta: false,
+            },
+            {
+              texto: "Parábola do Semeador (Lc C 10, V 25 a 37)",
+              correta: false,
+            },
+            {
+              texto: "Parábola  do Banquete de Casamento (Mt C 22, V 114)",
+              correta: true,
+            },
+            {texto: "Os talentos (Mt 25:14-30)", correta: false},
+          ],
+        },
+        {
+          texto: "Quem foi o rei que consultou a feiticeira?  ",
+          alternativas: [
+            {texto: "Oséias", correta: false},
+            {texto: "Saul", correta: true},
+            {texto: " Elá", correta: false},
+            {texto: "Baasa", correta: false},
+          ],
+        },
+        {
+          texto: "Quantas moedas de prata Judas recebeu?  ",
+          alternativas: [
+            {texto: "30 moedas", correta: true},
+            {texto: "40 moedas", correta: false},
+            {texto: "35 moedas", correta: false},
+            {texto: "60 moedas", correta: false},
+          ],
+        },
+        {
+          texto:
+            "Quem foi apedrejado por ordem de Jezabel por causa de uma vinha?  ",
+          alternativas: [
+            {texto: "Josué", correta: false},
+            {texto: "Lameque", correta: false},
+            {texto: "Nabot", correta: true},
+            {texto: "Jairus", correta: false},
+          ],
+        },
+        {
+          texto: "Onde Jesus subiu aos céus?  ",
+          alternativas: [
+            {texto: "Monte das Oliveiras", correta: true},
+            {texto: "Monte tabor", correta: false},
+            {texto: "Gólgota", correta: false},
+            {texto: "Cafarnaum", correta: false},
+          ],
+        },
+        {
+          texto:
+            "Quais são os 7 livros deuterocanônico aceitos pela igreja Católica?  ",
+          alternativas: [
+            {
+              texto:
+                "Gẽnesis, Colossenses, Hebreus, Eclesiastes, Ezequiel, Isaías",
+              correta: false,
+            },
+            {
+              texto: "Judite, Josué, Reis 1 e 2, Números, Levíticos, Juízes",
+              correta: false,
+            },
+            {
+              texto:
+                "Tobias, Judite, Sabedoria, Eclesiástico, Baruc, Macabeus 1 e 2 ",
+              correta: true,
+            },
+            {
+              texto:
+                "Eclesiásticos, Lamentações, Deuteronômio, Salmos, Ezequiel, Atos dos Apóstolos, Gálatas ",
+              correta: false,
+            },
+          ],
+        },
+        {
+          texto: "Quantas pragas caíram sobre o Egito?",
+          alternativas: [
+            {texto: "Dez", correta: true},
+            {texto: "Sete", correta: false},
+            {texto: "Doze", correta: false},
+            {texto: "Seis", correta: false},
+          ],
+        },
+        {
+          texto: "Quem ressuscitou Êutico?  ",
+          alternativas: [
+            {texto: "João", correta: false},
+            {texto: "Abraão", correta: false},
+            {texto: "Moisés", correta: false},
+            {texto: "Paulo", correta: true},
+          ],
+        },
+        {
+          texto: " Quantas parábolas há no capítulo 13 de Mateus?  ",
+          alternativas: [
+            {texto: "cinco parábolas", correta: false},
+            {texto: "Dez parábolas", correta: false},
+            {texto: "Sete parábolas", correta: true},
+            {texto: "Três parábolas", correta: false},
+          ],
+        },
+        {
+          texto:
+            "Quem era o profeta anão que subiu em uma árvore para ver Jesus?  ",
+          alternativas: [
+            {texto: "Sadraque", correta: false},
+            {texto: "Daniel", correta: false},
+            {texto: "Elias", correta: false},
+            {texto: "Zaqueu", correta: true},
+          ],
+        },
+        {
+          texto: "Na parábola o Bom Samaritano, quem ignorou o homem ferido?",
+          alternativas: [
+            {texto: "O sacerdote", correta: true},
+            {texto: "O homem rico", correta: false},
+            {texto: "Eunuco", correta: false},
+            {texto: "Oficial da Corte", correta: false},
+          ],
+        },
+        {
+          texto: "Qual ensinamento Jesus deu sobre  o pagamento de impostos?",
+          alternativas: [
+            {
+              texto: "Não devemos pagar os impostos a governantes injustos.",
+              correta: false,
+            },
+            {
+              texto:
+                "Os impostos devem ser ignorados, pois a justiça de Deus é maior que a justiça humana.",
+              correta: false,
+            },
+            {texto: "Daí a Cézar o que é de Cézar.", correta: true},
+            {
+              texto: "O pagamento de impostos é um pecado diante de Deus.",
+              correta: false,
+            },
+          ],
+        },
+        {
+          texto: "Quem morreu ao tocar na Arca da Aliança?",
+          alternativas: [
+            {texto: "Tobias", correta: false},
+            {texto: "Uzá", correta: true},
+            {texto: "Naum", correta: false},
+            {texto: "Joel", correta: false},
+          ],
+        },
+        {
+          texto: "Quem são os pais de Maria?",
+          alternativas: [
+            {texto: "Aarão e Miriam", correta: false},
+            {texto: "Joaquim e Ana", correta: true},
+            {texto: "Sara e Benjamin", correta: false},
+            {texto: "Maria e José", correta: false},
+          ],
+        },
+        {
+          texto: "Quem é o discípulo amado?",
+          alternativas: [
+            {texto: "Tiago", correta: false},
+            {texto: "Pedro", correta: false},
+            {texto: "João", correta: true},
+            {texto: "Mateus", correta: false},
+          ],
+        },
+        {
+          texto: "Qual idade de Jesus quando começou seu ministério público?",
+          alternativas: [
+            {texto: "29 anos", correta: false},
+            {texto: "35 anos", correta: false},
+            {texto: "33 anos ", correta: false},
+            {texto: "30 anos", correta: true},
+          ],
+        },
+        {
+          texto: "Qual carta fala sobre a armadura de Deus?",
+          alternativas: [
+            {texto: "Colossenses 12", correta: false},
+            {texto: "Filipenses 9", correta: false},
+            {texto: "Efésios 6", correta: true},
+            {texto: "Gálatas 10", correta: false},
+          ],
+        },
+        {
+          texto: "Qual mulher cortou o cabelo de Sansão?",
+          alternativas: [
+            {texto: "Jezabel", correta: false},
+            {texto: "Dalila", correta: true},
+            {texto: "Marta", correta: false},
+            {texto: "Naomi", correta: false},
+          ],
+        },
+        {
+          texto: "Qual é o nome do discípulo que traiu Jesus?",
+          alternativas: [
+            {texto: "Tiago Maior", correta: false},
+            {texto: "André", correta: false},
+            {texto: "Judas Iscariotes", correta: true},
+            {texto: "Judas Tadeu ", correta: false},
+          ],
+        },
+        {
+          texto: "Quem era Onã e o que ele fez de errado?",
+          alternativas: [
+            {texto: "Era ladrão", correta: false},
+            {
+              texto:
+                "Combrador de impostos, cometeu homicídio na cidade de Corinto",
+              correta: false,
+            },
+            {
+              texto: "Filho de Nabot cometeu rebeldia contra o Império romano ",
+              correta: false,
+            },
+            {
+              texto:
+                "Filho de Judá que se recusou a gerar descendência para o irmão",
+              correta: true,
+            },
+          ],
+        },
+        {
+          texto: "Quantos livros tem na Bíblia Católica?",
+          alternativas: [
+            {texto: "73, 46 AT + 27 NT", correta: true},
+            {texto: "66, 39 AT + 27 NT", correta: false},
+            {texto: "81, 59 AT + 22 NT", correta: false},
+            {texto: "63, 35 AT + 26 NT ", correta: false},
+          ],
+        },
+        {
+          texto: "Quantos dias Moisés ficou no Monte Sinai recebendo a lei?",
+          alternativas: [
+            {texto: "30 dias e 30 noites", correta: false},
+            {texto: "365 dias", correta: false},
+            {texto: "50 dias e 50 noites", correta: false},
+            {texto: "40 dias e 40 noites", correta: true},
+          ],
+        },
+        {
+          texto: "Qual rei ficou louco e viveu como animal?",
+          alternativas: [
+            {texto: "Uzias", correta: false},
+            {texto: "Salum", correta: false},
+            {texto: "Nabucodonosor", correta: true},
+            {texto: "Manaém", correta: false},
+          ],
+        },
+        {
+          texto: "Qual profeta enfrentou os profetas de Baal?",
+          alternativas: [
+            {texto: "Amós", correta: false},
+            {texto: "Ezequiel", correta: false},
+            {texto: "Daniel", correta: false},
+            {texto: "Elias", correta: true},
+          ],
+        },
+        {
+          texto: "Quantos Salmos há na bíblia?",
+          alternativas: [
+            {texto: "98 Salmos", correta: false},
+            {texto: "150 Salmos", correta: true},
+            {texto: "172 Salmos", correta: false},
+            {texto: "160 Salmos", correta: false},
+          ],
+        },
+        {
+          texto: "Quem Batizou Jesus?  ",
+          alternativas: [
+            {texto: "Herodes", correta: false},
+            {texto: "Zacarias", correta: false},
+            {texto: "João Batista", correta: true},
+            {texto: "José", correta: false},
+          ],
+        },
+        {
+          texto: "Qual mulher serviu como juíza de Israel?",
+          alternativas: [
+            {texto: "Débora", correta: true},
+            {texto: "sarah", correta: false},
+            {texto: "Rebeca", correta: false},
+            {texto: "Maria Betânia", correta: false},
+          ],
+        },
+        {
+          texto: "Quem é descrito como 'Alfa e Ômega'  ",
+          alternativas: [
+            {texto: "São Bento", correta: false},
+            {texto: "Jesus Cristo", correta: true},
+            {texto: "Espirito Santo", correta: false},
+            {texto: "São Padre Pio", correta: false},
+          ],
+        },
+        {
+          texto: "O que João viu ao abrir o sexto Selo?  ",
+          alternativas: [
+            {
+              texto:
+                "Um cavalo branco, e o cavaleiro tinha um arco e foi coroado",
+              correta: false,
+            },
+            {
+              texto:
+                "Almas dos mártires debaixo do altar, clamando por justiça ",
+              correta: false,
+            },
+            {
+              texto:
+                "Um cavalo amarelo; o cavaleiro se chamava Morte, e o Inferno o seguia",
+              correta: false,
+            },
+            {
+              texto:
+                "Grande terremoto, sol escurece, lua se torna sangue, estrelas caem",
+              correta: true,
+            },
+          ],
+        },
+        {
+          texto: "Quem foi o pai de João Batista?",
+          alternativas: [
+            {texto: "Enoque", correta: false},
+            {texto: "Zacarias", correta: true},
+            {texto: "Eli", correta: false},
+            {texto: "Jó", correta: false},
+          ],
+        },
+        {
+          texto: "Quem escreveu a carta mais curta do novo testamento?  ",
+          alternativas: [
+            {texto: "São Lucas", correta: false},
+            {texto: "São Marcos", correta: false},
+            {texto: "São Paulo", correta: false},
+            {texto: "São joão", correta: true},
+          ],
+        },
+        {
+          texto:
+            "Qual parábola fala sobre um filho que abandona o pai depois retorna?",
+          alternativas: [
+            {texto: "As Dez Virgens", correta: false},
+            {texto: "O Fermento", correta: false},
+            {texto: "O filho Pródigo", correta: true},
+            {texto: "O Semeador", correta: false},
+          ],
+        },
+        {
+          texto: "Quem foi Paulo antes da sua conversão ?  ",
+          alternativas: [
+            {texto: "Esdras, Escriba", correta: false},
+            {texto: "Levi, pescador", correta: false},
+            {
+              texto: "Natanael, Homem devoto estudante das escrituras",
+              correta: false,
+            },
+            {texto: "Saulo de Tarso, perseguidor de cristãos", correta: true},
+          ],
+        },
+        {
+          texto: "Qual apóstolo era médico?  ",
+          alternativas: [
+            {texto: "Matias", correta: false},
+            {texto: "Lucas", correta: true},
+            {texto: "Filipe", correta: false},
+            {texto: "Simão, o Zelote", correta: false},
+          ],
+        },
+        {
+          texto: "Quem disse: 'Minha alma engrandece o senhor' ?  ",
+          alternativas: [
+            {texto: "Maria Madalena", correta: false},
+            {texto: "Ester", correta: false},
+            {texto: "Ana", correta: false},
+            {texto: "Maria", correta: true},
+          ],
+        },
+        {
+          texto: "Qual é a árvore da vida mencionada no Apocalipse?",
+          alternativas: [
+            {texto: "A árvore do conhecimento do bem e do mal", correta: false},
+            {
+              texto:
+                "A ávoré do conhecimento, que representa a vida eterna de Cristo ",
+              correta: false,
+            },
+            {
+              texto: "A árvore que dá fruto todo mês e cura nações",
+              correta: true,
+            },
+            {
+              texto:
+                "A árvore frutífera que crescerá em solo fértil para a cura das nações durante momentos de desespero",
+              correta: false,
+            },
+          ],
+        },
+        {
+          texto: "Quantos selos havia no livro que só o cordeiro podia abir?  ",
+          alternativas: [
+            {texto: " Vinte e Quatro Selos", correta: false},
+            {texto: "Dez Selos", correta: false},
+            {texto: "doze Selos", correta: false},
+            {texto: "Sete Selos", correta: true},
+          ],
+        },
+        {
+          texto: "Qual rei viu a mão de Deus escrevendo na parede?  ",
+          alternativas: [
+            {texto: "Belsazar", correta: true},
+            {texto: "Salomão", correta: false},
+            {texto: "Manassés", correta: false},
+            {texto: "Ezequias", correta: false},
+          ],
+        },
+        {
+          texto: "Na parábola do rico e Lázaro, qual era o pecado do rico?",
+          alternativas: [
+            {texto: "Avareza e amor ao dinheiro", correta: false},
+            {texto: "Indiferença ao sofrimento de Lázaro", correta: true},
+            {texto: "Cometeu adultério com sua esposa", correta: false},
+            {texto: "Arrogância espiritual", correta: false},
+          ],
+        },
+        {
+          texto: "Qual livro narra a história de uma rainha judia na Pérsia?  ",
+          alternativas: [
+            {texto: "Romanos", correta: false},
+            {texto: "Habacuc", correta: false},
+            {texto: "Ester", correta: true},
+            {texto: "Juízes", correta: false},
+          ],
+        },
+        {
+          texto: "Quem foi o primeiro papa?  ",
+          alternativas: [
+            {texto: "São Pedro", correta: true},
+            {texto: "São Pio I", correta: false},
+            {texto: "Santo Evaristo", correta: false},
+            {texto: "São Alexandre I", correta: false},
+          ],
+        },
+        {
+          texto: "Quantas pessoas foram salvas na arca de Noé?",
+          alternativas: [
+            {texto: "Cinco pessoas", correta: false},
+            {texto: "Seis pessoas", correta: false},
+            {texto: "Oito pessoas", correta: true},
+            {texto: "Três pessoas", correta: false},
+          ],
+        },
+        {
+          texto: "Qual foi o castigo de Caim?",
+          alternativas: [
+            {
+              texto:
+                "Teve sua vida amaldiçoada a nunca ter família e viver sozinho",
+              correta: false,
+            },
+            {texto: "Foi condenado a ficar cego", correta: false},
+            {
+              texto: "Trabalho árduo e penoso em terras inférteis ",
+              correta: false,
+            },
+            {
+              texto: "Foi amaldiçoado e condenado a vaguear como errante",
+              correta: true,
+            },
+          ],
+        },
+
+        // (...) Demais 92 questões aqui
+      ];
+      let indiceAtual = 0;
+      let travado = false;
+      let pontuacao = 0;
+
+      function mostrarPergunta() {
+        travado = false;
+        const pergunta = perguntas[indiceAtual];
+        document.getElementById("pergunta").innerText = pergunta.texto;
+
+        const respostasDiv = document.getElementById("respostas");
+        respostasDiv.innerHTML = "";
+
+        pergunta.alternativas.forEach((alt) => {
+          const div = document.createElement("div");
+          div.classList.add("resposta");
+          div.innerText = alt.texto;
+          div.onclick = () => verificarResposta(div, alt.correta);
+          respostasDiv.appendChild(div);
+        });
+
+        document.getElementById("resultado").innerText = "";
+      }
+
+      function verificarResposta(elemento, correta) {
+        if (travado) return;
+        travado = true;
+
+        if (correta) pontuacao++;
+
+        const alternativas = document.querySelectorAll(".resposta");
+        alternativas.forEach((el) => {
+          el.onclick = null;
+          const texto = el.innerText;
+          const certo = perguntas[indiceAtual].alternativas.find(
+            (a) => a.texto === texto
+          )?.correta;
+          el.classList.add(certo ? "correta" : "errada");
+        });
+
+        document.getElementById("resultado").innerText = correta
+          ? "✅ Resposta correta!"
+          : "❌ Resposta incorreta.";
+      }
+
+      function proximaPergunta() {
+        if (indiceAtual < perguntas.length - 1) {
+          indiceAtual++;
+          mostrarPergunta();
+        } else {
+          mostrarResultadoFinal();
+        }
+      }
+
+      function voltarPergunta() {
+        if (indiceAtual > 0) {
+          indiceAtual--;
+          mostrarPergunta();
+        }
+      }
+
+      function mostrarResultadoFinal() {
+        document.getElementById("pergunta").innerText =
+          "🎉 Você concluiu o quiz!";
+        document.getElementById("respostas").innerHTML = "";
+        document.getElementById(
+          "resultado"
+        ).innerText = `Pontuação final: ${pontuacao} de ${perguntas.length}`;
+
+        const botaoReiniciar = document.createElement("button");
+        botaoReiniciar.innerText = "Reiniciar Quiz";
+        botaoReiniciar.onclick = reiniciarQuiz;
+        botaoReiniciar.classList.add("botao-reiniciar");
+        document.getElementById("respostas").appendChild(botaoReiniciar);
+      }
+
+      function reiniciarQuiz() {
+        indiceAtual = 0;
+        pontuacao = 0;
+        mostrarPergunta();
+      }
+
+      // Iniciar quiz
+      mostrarPergunta();
+    </script>
+  </body>
+</html>
